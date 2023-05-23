@@ -30,50 +30,43 @@
   </div>
 </template>
 
-<script>
-
-import { defineComponent, ref } from 'vue'
+<script setup>
 
 // zoom dynmic images
 // https://v2.vuepress.vuejs.org/reference/plugin/medium-zoom.html#usemediumzoom
-import { nextTick } from 'vue'
+import { ref, nextTick } from 'vue'
 import { useMediumZoom } from '@vuepress/plugin-medium-zoom/client'
 
+const zoom = useMediumZoom()
+const current = ref(1) 
 
-export default defineComponent( {
-  components: {
-  },
-  methods: {
-    async zrefresh() {
-      await nextTick()
-      if (this.zoom) {
-        this.zoom.refresh('img.zoomable')
-      }
-    },
-    goNext() {
-      if (this.current < 3) {
-        this.current++
-        this.imgChanged()
-      }
-    },
-    goBack() {
-      if (this.current > 1) {
-        this.current--
-        this.imgChanged()
-      }
-    },
-    imgChanged() {
-      if (this.zoom) {
-        setTimeout(this.zrefresh,100)
-      }
-    }
-  },
-  setup (props) {
-    const zoom = useMediumZoom()
-    const current = ref(1) 
-    return { current, zoom}
+const imgChanged = () => {
+  if (zoom) {
+    setTimeout(zrefresh,100)
   }
-})
+}
+
+const zrefresh = async () => {
+  await nextTick()
+  if (zoom) {
+    zoom.refresh('img.zoomable')
+  }
+}
+
+const goNext = () => {
+  if (current.value < 3) {
+    current.value++
+    imgChanged()
+  }
+}
+
+const goBack = () => {
+  if (current.value > 1) {
+    current.value--
+    imgChanged()
+  }
+}
+
 </script>
 
 
@@ -108,10 +101,3 @@ export default defineComponent( {
 
 </style>
 
-<style>
-/* notification needs global style ! */
-.note {
-  padding: 5px;
-  margin-right: 2rem;
-}
-</style>
