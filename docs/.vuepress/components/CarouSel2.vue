@@ -37,7 +37,10 @@
 import { ref, nextTick } from 'vue'
 import { useMediumZoom } from '@vuepress/plugin-medium-zoom/client'
 
-const zoom = useMediumZoom()
+//const zoom = useMediumZoom()
+// dynamic images not possible in SSR mode
+// wrap component in "ClientOnly"
+const zoom = __VUEPRESS_SSR__? null : useMediumZoom()
 const current = ref(1) 
 
 const imgChanged = () => {
